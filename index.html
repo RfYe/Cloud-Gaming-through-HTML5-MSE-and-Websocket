@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cloud gaming based on HTML5</title>
+    <style type="text/css">
+        video::-webkit-media-controls {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    Welcome<br />
+    <button onclick="startStream()">Start Streaming!</button>
+        <video id="webSocketPlayer"></video>
+</body>
+
+<script type="text/javascript">
+    var websocket = null;
+    var player = document.getElementById('webSocketPlayer');
+    var mediaSource;
+    var sourceBuffer;
+    var data = [];
+    var firstDataTransmit = true;
+    var firstDataPlay = true;
+    var frame_index = 0;
+    //player.playbackRate = 1.1;
+    //document.addEventListener('keydown', keydowned);
+    document.addEventListener('click', mouseLeftKeyDowned);
+    document.oncontextmenu = function (e) {
+        e.preventDefault();
+    }
+    document.addEventListener('mousedown', mouseRightKeyDowned);
+    if (window.MediaSource) {
+        mediaSource = new MediaSource();
+        mediaSource.addEventListener('sourceopen', sourceOpen);
+        console.log("media source is ready");
+        player.src = URL.createObjectURL(mediaSource);
+    }
+    //display message on the page
+    function setMessageInnerHTML(innerHTML) {
+        document.getElementById('message').innerHTML += innerHTML + '<br/>';
+    }
+
+    //close the websocket connection
+    function closeWebSocket() {
+        websocket.close();
+    }
+
+    function sourceOpen(e) {
+        console.log("sourceopened");
+        var mime = 'video/mp4; codecs="avc1.4D401E"';
+        sourceBuffer = mediaSource.addSourceBuffer(mime);
+        sourceBuffer.addEventListener('updateend', function () {
+            if (firstDataPlay) {
+                console.log("playing first chunk of data");
+                player.play();
+                firstDataPlay = false;
+            }
+            var temp = data.shift();
+            if (temp == undefined) {
+                sourceBuffer.appendBuffer(new ArrayBuffer(0));
+            }
+            else {
+                sourceBuffer.appendBuffer(temp);
+                var buffered = sourceBuffer.buffered;
+                var duration = buffered.end(0) - buffered.start(0);
+                console.log(duration);
+                if (duration > 20 && player.playbackRate!=2) {
+                    console.log("speeding up");
+                    console.log(player.playbackRate);
+                    player.playbackRate=1.25;
+                }
+                else {
+                    player.playbackRate = 1.0;
+                }
+                //var myListLength = mediaSource.sourceBuffers.length;
+                //console.log(myListLength);
+            }
+        });
+    }
+    function startStream() {
+        //Change the video to fullscreen when start playing
+        
+        if (player.requestFullscreen) {
+            player.requestFullscreen();
+        } else if (player.msRequestFullscreen) {
+            player.msRequestFullscreen();
+        } else if (player.webkitRequestFullscreen) {
+            player.webkitRequestFullscreen();
+        }
+        //Tell whether this browser is supporting Websocket or not
+        if ('WebSocket' in window) {
+            websocket = new WebSocket("ws://23.96.53.232:8080/firstTest/websocket");
+            websocket.binaryType = "arraybuffer";
+        }
+        else {
+            alert("This browser doesn't support websocket")
+        }
+
+        //Callback function when Websocket connection is on error
+        websocket.onerror = function () {
+            console.log("WebSocket went wrong");
+        };
+
+        //Callbacck function when Websocket connection is established
+        websocket.onopen = function () {
+            console.log("WebSocket connected");
+        }
+
+        //Callback function when message received
+        websocket.onmessage = function (event) {
+            frame_index = frame_index + 1;
+            if (firstDataTransmit) {
+                console.log("append first chunk of data");
+                sourceBuffer.appendBuffer(event.data);
+                firstDataTransmit = false;
+                return;
+            }
+            if (frame_index==-1) {
+                data.push(new ArrayBuffer(0));
+            }
+            else {
+                data.push(event.data);
+            }
+        }
+
+        //The function will be triggered when Websocket connection is closed 
+        websocket.onclose = function () {
+            console.log("WebSocket connection is closed");
+        }
+
+        //Close the Websocket connection when close the browser window
+        window.onbeforeunload = function () {
+            closeWebSocket();
+        }
+    }
+    function mouseLeftKeyDowned(event) {
+        if (websocket != null && websocket.readyState == 1) {
+            var e = event || window.event;
+            location_x = e.screenX * 1920 / screen.width;
+            location_y = e.screenY * 1080 / screen.height;
+            websocket.send("ml" + location_x + " " + location_y);
+        }
+         else {
+            console.log("the webscoket connection is not established yet");
+        }
+    }
+    function mouseRightKeyDowned(event){
+        if (websocket != null && websocket.readyState == 1) {
+            if (event.button == 2) {
+                var e = event || window.event;
+                location_x = e.screenX * 1920 / screen.width;
+                location_y = e.screenY * 1080 / screen.height;
+                websocket.send("mr" + location_x + " " + location_y);
+            }
+        }
+        else {
+            console.log("the webscoket connection is not established yet");
+        }
+    }
+    function keydowned(event) {
+        if (websocket != null && websocket.readyState == 1) {
+            websocket.send("k"+event.keyCode);
+        } else {
+            console.log("The webscoket connection is not established yet");
+        }
+    }
+</script>
