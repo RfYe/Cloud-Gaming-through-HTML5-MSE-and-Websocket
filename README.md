@@ -17,9 +17,5 @@ File Description
 =====
 The graphicCapture.cpp includes the code capturing the graphic from default graphic card using DirectX, encoding and packaging with FFMPEG
 
-The WebsocketTomcat.java includes the basic logic of dealing with data communication between backend and frontend.
-
-Relationship
-==
-The code WebsocketTomcat.java will call and initialize the graphic Capture&Encoding&Packaging service 
+The WebsocketTomcat.java includes the basic logic of dealing with data communication between backend and frontend. Once a websocket connection is established, it will initialize the Capture&&Encoding&&Packaging service in graphicCapture.cpp through JNI call
 
