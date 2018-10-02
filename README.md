@@ -2,6 +2,8 @@
 Enable cloud gaming on mainstream browsers using HTML5 MSE and Websocket. This combination is plugin free, which ensure the cross platform(mobile browser&amp;desktop browser) compatibility
 
 BRIEF INTRODUCTION
+=====
+This is a project intented for proving cloud gaming based on web browser,which could tansforming the future gaming industry, is feasible. The overall performance of the system, varying from different network enviroment and machines, is around 30fps and a delay around 600ms without any optimization.
 
 The whole system can be separated into three parts:
 
@@ -12,6 +14,6 @@ The whole system can be separated into three parts:
 3.Frontend web page:enable websocket for receiving media data from Tomcat server, feeding the received media data to the media source extension for demuxing and decoding, meanwhile listening to the user input(keyboard&mouse) signal and sent ot back to the backend.
 
 FILE DESCRIPTION
-
-The
+=====
+The 
 
