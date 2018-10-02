@@ -19,3 +19,4 @@ The graphicCapture.cpp includes the code capturing the graphic from default grap
 
 The WebsocketTomcat.java includes the basic logic of dealing with data communication between backend and frontend. Once a websocket connection is established, it will initialize the Capture&&Encoding&&Packaging service in graphicCapture.cpp through JNI call
 
+The index.html is the page that includes code using websocket to receive media data and feed the data to MSE for playing  
