@@ -1,6 +1,6 @@
 Demo URL
 ======
-http://www.cloudgamingdemo.com//gateway//index.html
+http://www.cloudgamingdemo.com/gateway/index.html
 
 
 # Cloud-Gaming-through-HTML5-MSE-and-Websocket
