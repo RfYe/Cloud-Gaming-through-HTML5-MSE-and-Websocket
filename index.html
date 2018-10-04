@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Cloud gaming based on HTML5</title>
+    <title>Cloud gaming demo</title>
     <style type="text/css">
         video::-webkit-media-controls {
             display: none !important;
@@ -9,9 +9,15 @@
     </style>
 </head>
 <body>
-    Welcome<br />
-    <button onclick="startStream()">Start Streaming!</button>
-        <video id="webSocketPlayer"></video>
+    <h1 align="center" style="color:darkorange ; font-size:50px">Welcome to cloud gaming demo</h1>
+    <p align="center" style="color:green ; font-size:30px">Please read the details below</p>
+    <p style="color:black ; font-size:20px">For the purpose of technical demoing, the game I chose is the classic Microsoft minesweeper, which is lightwight (AAA titled games like Assassin Creed requires high performance machine, which is not the case for my server) and also easy to play (means simplified control signal processing), most importantly, it's free!</p>
+    <p style="color:black ; font-size:20px">After you click the start streaming button below, the browser window will be full-screened automatically and please wait about 15 seconds to allow the backend initializing the service. Thank you!</p>
+    <br/>
+    <div align="center">
+        <button onclick="startStream()" style="width:200px;height:60px">Click to start the streaming</button>
+    </div>
+    <video id="webSocketPlayer"></video>
 </body>
 
 <script type="text/javascript">
@@ -64,10 +70,10 @@
                 sourceBuffer.appendBuffer(temp);
                 var buffered = sourceBuffer.buffered;
                 var duration = buffered.end(0) - buffered.start(0);
-                console.log(duration);
+                //console.log(duration);
                 if (duration > 20 && player.playbackRate!=2) {
-                    console.log("speeding up");
-                    console.log(player.playbackRate);
+                    //console.log("speeding up");
+                    //console.log(player.playbackRate);
                     player.playbackRate=1.25;
                 }
                 else {
@@ -90,7 +96,7 @@
         }
         //Tell whether this browser is supporting Websocket or not
         if ('WebSocket' in window) {
-            websocket = new WebSocket("ws://23.96.53.232:8080/firstTest/websocket");
+            websocket = new WebSocket("ws://23.96.53.232:80/firstTest/websocket");
             websocket.binaryType = "arraybuffer";
         }
         else {
