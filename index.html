@@ -9,13 +9,14 @@
     </style>
 </head>
 <body>
-    <h1 align="center" style="color:darkorange ; font-size:50px">Welcome to cloud gaming demo</h1>
+    <h1 align="center" style="color:darkorange ; font-size:50px">Welcome to Cloud Gaming Demo</h1>
     <p align="center" style="color:green ; font-size:30px">Please read the details below</p>
-    <p style="color:black ; font-size:20px">For the purpose of technical demoing, the game I chose is the classic Microsoft minesweeper, which is lightwight (AAA titled games like Assassin Creed requires high performance machine, which is not the case for my server) and also easy to play (means simplified control signal processing), most importantly, it's free!</p>
-    <p style="color:black ; font-size:20px">After you click the start streaming button below, the browser window will be full-screened automatically and please wait about 15 seconds to allow the backend initializing the service. Thank you!</p>
+    <p style="color:black ; font-size:20px">For the purpose of technical demoing, the game I chose is the classic Microsoft minesweeper, which is lightwight (I am sorry for this server doesn't have the qualified hardware to run the AAA titled games like Assassin's Creed) and also easy to control, most importantly, it's free!</p>
+    <p style="color:black ; font-size:20px">After clicking the start streaming button below, the browser will be full-screened automatically and please wait <strong>about 15 seconds</strong> to allow the backend initializing the service. Thank you!</p>
     <br/>
     <div align="center">
         <button onclick="startStream()" style="width:200px;height:60px">Click to start the streaming</button>
+        <p align="center" style="color:green ; font-size:30px">Recommend using Google Chrome Browser</p>
     </div>
     <video id="webSocketPlayer"></video>
 </body>
@@ -91,6 +92,8 @@
             player.requestFullscreen();
         } else if (player.msRequestFullscreen) {
             player.msRequestFullscreen();
+        } else if (player.mozRequestFullScreen) {
+            player.mozRequestFullScreen();
         } else if (player.webkitRequestFullscreen) {
             player.webkitRequestFullscreen();
         }
